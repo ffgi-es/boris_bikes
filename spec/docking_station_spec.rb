@@ -35,9 +35,14 @@ describe DockingStation do
   it { is_expected.to respond_to :dock_bike }
 
   describe "#dock_bike" do
-    it "should accept a Bike" do
+    it "should accept a Bike and store it" do
       bike = Bike.new
-      expect{ subject.dock_bike bike }.to_not raise_error
+      subject.dock_bike bike
+      expect(subject.bike).to eq bike
+    end
+
+    it "should raise an error if there is no space" do
+      expect{ 3.times { subject.dock_bike Bike.new } }.to raise_error FullStationError
     end
   end
 

@@ -11,6 +11,7 @@ class DockingStation
   end
 
   def dock_bike bike
+    raise FullStationError unless self.bike.nil?
     @bike = bike
   end
 
@@ -20,4 +21,7 @@ class DockingStation
 end
 
 class EmptyStationError < StandardError
+end
+
+class FullStationError < StandardError
 end
