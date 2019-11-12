@@ -1,22 +1,24 @@
 require "bike"
 
 class DockingStation
-  attr_reader :bike
+  attr_reader :bikes
+
+  def initialize
+    @bikes = []
+  end
 
   def release_bike
-    raise EmptyStationError if self.bike.nil?
-    result = self.bike
-    @bike = nil
-    return result
+    raise EmptyStationError if self.bikes.empty?
+    self.bikes.pop
   end
 
   def dock_bike bike
-    raise FullStationError unless self.bike.nil?
-    @bike = bike
+    raise FullStationError unless self.bikes.size < 20
+    @bikes.push bike
   end
 
   def docked?
-    !self.bike.nil?
+    !self.bikes.empty?
   end
 end
 

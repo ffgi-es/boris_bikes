@@ -25,10 +25,16 @@ describe DockingStation do
       expect(bike.working?).to eq true
     end
 
-    it "should remove the bike return from the station" do
+    it "should remove the bike returned from the station" do
       subject.dock_bike Bike.new
       subject.release_bike
       expect(subject.docked?).to eq false
+    end
+
+    it "should store and return multiple bikes" do
+      5.times { subject.dock_bike Bike.new }
+      5.times { subject.release_bike }
+      expect{ subject.release_bike }.to raise_error EmptyStationError
     end
   end
 
@@ -38,15 +44,15 @@ describe DockingStation do
     it "should accept a Bike and store it" do
       bike = Bike.new
       subject.dock_bike bike
-      expect(subject.bike).to eq bike
+      expect(subject.bikes.first).to eq bike
     end
 
     it "should raise an error if there is no space" do
-      expect{ 3.times { subject.dock_bike Bike.new } }.to raise_error FullStationError
+      expect{ 21.times { subject.dock_bike(Bike.new) } }.to raise_error FullStationError
     end
   end
 
-  it { is_expected.to have_attributes(bike: nil) }
+  it { is_expected.to have_attributes(bikes: []) }
   it { is_expected.to respond_to(:docked?) }
 
   describe "#docked?" do
