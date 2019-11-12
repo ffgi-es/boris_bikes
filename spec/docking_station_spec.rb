@@ -2,19 +2,33 @@ require "docking_station"
 
 describe DockingStation do
   subject {described_class.new}   
+
   it "should exist"  do
     expect(subject).to be_instance_of DockingStation
   end
 
   it {is_expected.to respond_to :release_bike}
   
-  describe "release_bike" do
-    it "should create an instance of bike" do
+  describe "#release_bike" do
+    it "should return a Bike if there is one docked" do
+      subject.dock_bike Bike.new
       expect(subject.release_bike).to be_instance_of Bike
     end
-    it "should tell us if the bike is working" do
+
+    it "should raise an error if there is no bike" do
+      expect{ subject.release_bike }.to raise_error EmptyStationError
+    end
+
+    it "should release a working bike" do
+      subject.dock_bike Bike.new
       bike = subject.release_bike
       expect(bike.working?).to eq true
+    end
+
+    it "should remove the bike return from the station" do
+      subject.dock_bike Bike.new
+      subject.release_bike
+      expect(subject.docked?).to eq false
     end
   end
 
