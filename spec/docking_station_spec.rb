@@ -7,6 +7,17 @@ describe DockingStation do
   end
 
   it {is_expected.to respond_to :release_bike}
+  describe "release_bike" do
+    it "should create an instance of bike" do
+      expect(subject.release_bike).to be_instance_of Bike
+    end
+    it "should tell us if the bike is working" do
+      bike = subject.release_bike
+      expect(bike.working?).to eq true
+    end
+    
+  end
+
   
 end
 
