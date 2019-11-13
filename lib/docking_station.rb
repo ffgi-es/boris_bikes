@@ -8,17 +8,27 @@ class DockingStation
   end
 
   def release_bike
-    raise EmptyStationError if self.bikes.empty?
+    raise EmptyStationError if empty?
     self.bikes.pop
   end
 
   def dock_bike bike
-    raise FullStationError unless self.bikes.size < 20
+    raise FullStationError if full?
     @bikes.push bike
   end
 
   def docked?
     !self.bikes.empty?
+  end
+
+  private
+  
+  def full?
+    self.bikes.size >= 20
+  end
+
+  def empty?
+    self.bikes.empty?
   end
 end
 
