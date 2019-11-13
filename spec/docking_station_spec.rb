@@ -7,6 +7,15 @@ describe DockingStation do
     expect(subject).to be_instance_of DockingStation
   end
 
+  describe "#new" do
+    it { is_expected.to have_attributes(capacity: 20) }
+
+    it "should be able to set capacity at initialisation" do
+      subject = DockingStation.new 30
+      expect(subject).to have_attributes(capacity: 30)
+    end
+  end
+
   it {is_expected.to respond_to :release_bike}
   
   describe "#release_bike" do
