@@ -48,7 +48,9 @@ describe DockingStation do
     end
 
     it "should raise an error if there is no space" do
-      expect{ 21.times { subject.dock_bike(Bike.new) } }.to raise_error FullStationError
+      expect{ 
+        (DockingStation::DEFAULT_CAPACITY + 1).times { subject.dock_bike(Bike.new) }
+      }.to raise_error FullStationError
     end
   end
 
