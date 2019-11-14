@@ -24,6 +24,15 @@ class DockingStation
     !@bikes.empty?
   end
 
+  def return_bikes
+    @bikes, result = @bikes.partition { |bike| bike.working? }
+    result
+  end
+
+  def receive_bikes bike_arr
+    @bikes += bike_arr
+  end
+
   private
   
   def full?
