@@ -1,8 +1,6 @@
-require "bike"
-
 class DockingStation
   DEFAULT_CAPACITY = 20
-  attr_reader :bikes, :capacity
+  attr_reader :capacity
 
   def initialize capacity = DEFAULT_CAPACITY
     @bikes = []
@@ -11,26 +9,38 @@ class DockingStation
 
   def release_bike
     raise EmptyStationError if empty?
-    self.bikes.pop
+    raise NoWorkingBikesError unless working_bikes?
+    @bikes.rotate! until @bikes.first.working?
+    @bikes.shift
   end
 
-  def dock_bike bike
+  def dock_bike(bike, working = true)
     raise FullStationError if full?
+    report_damaged bike unless working
     @bikes.push bike
   end
 
   def docked?
-    !self.bikes.empty?
+    !@bikes.empty?
   end
 
   private
   
   def full?
-    self.bikes.size >= DEFAULT_CAPACITY
+    @bikes.size >= DEFAULT_CAPACITY
   end
 
   def empty?
-    self.bikes.empty?
+    @bikes.empty?
+  end
+
+  def working_bikes?
+    @bikes.any? { |bike| bike.working? }
+  end
+
+  def report_damaged bike
+    puts "Thank you for the report"
+    bike.damaged
   end
 end
 
@@ -38,4 +48,7 @@ class EmptyStationError < StandardError
 end
 
 class FullStationError < StandardError
+end
+
+class NoWorkingBikesError < StandardError
 end
