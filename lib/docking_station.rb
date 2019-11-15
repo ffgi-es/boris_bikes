@@ -1,10 +1,13 @@
+require 'bike_collection'
+
 class DockingStation
   DEFAULT_CAPACITY = 20
-  attr_reader :capacity
+
+  include BikeCollection
 
   def initialize capacity = DEFAULT_CAPACITY
     @bikes = []
-    @capacity = capacity
+    @capacity = capacity >= 0 ? capacity : DEFAULT_CAPACITY
   end
 
   def release_bike
@@ -24,25 +27,8 @@ class DockingStation
     !@bikes.empty?
   end
 
-  def return_bikes
-    @bikes, result = @bikes.partition { |bike| bike.working? }
-    result
-  end
-
-  def receive_bikes bike_arr
-    @bikes += bike_arr
-  end
-
   private
   
-  def full?
-    @bikes.size >= capacity
-  end
-
-  def empty?
-    @bikes.empty?
-  end
-
   def working_bikes?
     @bikes.any? { |bike| bike.working? }
   end

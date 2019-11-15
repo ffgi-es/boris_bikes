@@ -1,4 +1,5 @@
 context 'collecting and fixing broken bikes' do
+  before(:each) { allow($stdout).to receive(:write) }
   specify 'collect broken, fix and return working' do
     given_a_docking_station_with_5_working_7_broken_bikes
     when_a_van_collects_the_broken_bikes
@@ -19,7 +20,7 @@ context 'collecting and fixing broken bikes' do
 
   def when_a_van_collects_the_broken_bikes
     @van = Van.new
-    @van.collect_from @station
+    @van.receive_bikes_from(@station) { |bike| !bike.working? }
   end
 
   def then_we_can_get_5_working_bikes_and_no_more
@@ -32,16 +33,16 @@ context 'collecting and fixing broken bikes' do
   end
 
   def when_the_van_drops_off_the_bikes
-    @van.deliver_to @garage
+    @garage.receive_bikes_from @van
   end
 
   def the_garage_fixes_the_bikes_and_returns_them
     @garage.fix_bikes
-    @van.collect_from @garage
+    @van.receive_bikes_from(@garage) { |bike| bike.working? }
   end
 
   def the_van_returns_the_bikes_to_the_station
-    @van.deliver_to @station
+    @station.receive_bikes_from(@van) { |bike| bike.working? }
   end
 
   def then_we_can_get_7_more_working_bikes

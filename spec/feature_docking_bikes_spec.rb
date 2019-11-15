@@ -2,6 +2,7 @@ require 'docking_station'
 require 'bike'
 
 context 'Docking Bikes' do
+  before(:each) { allow($stdout).to receive(:write) }
   specify 'Docking a bike' do
     given_there_is_a_docking_station
     when_i_dock_a_bike

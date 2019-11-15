@@ -1,22 +1,13 @@
 class Garage
-  def initialize
+  DEFAULT_CAPACITY = 20
+  include BikeCollection
+
+  def initialize capacity = DEFAULT_CAPACITY
     @bikes = []
-  end
-
-  def receive_bikes bike_array
-    @bikes += bike_array
-  end
-
-  def return_bikes
-    result, @bikes = @bikes.partition { |bike| bike.working? }
-    result
+    @capacity = capacity >= 0 ? capacity : DEFAULT_CAPACITY
   end
 
   def fix_bikes
     @bikes.each { |bike| bike.fix unless bike.working? }
-  end
-
-  def empty?
-    @bikes.empty?
   end
 end

@@ -1,9 +1,10 @@
-require "docking_station"
+require 'docking_station'
+require 'bike_collection_examples'
 
 describe DockingStation do
   let(:bike) { double(:bike, damaged: nil, working?: true) }
   let(:broken_bike) { double(:bike, damaged: nil, working?: false) }
-  let(:bikes) { [bike] * 5 }
+  before(:each) { allow($stdout).to receive(:write) }
 
   describe "#new" do
     it { is_expected.to have_attributes(capacity: 20) }
@@ -100,48 +101,5 @@ describe DockingStation do
     end
   end
 
-  describe "#return_bikes" do
-    it "should return an empty array if empty" do
-      expect(subject.return_bikes).to eq []
-    end
-
-    it "should return an empty array if all bikes work" do
-      5.times { subject.dock_bike bike }
-      expect(subject.return_bikes).to eq []
-    end
-
-    it "should return broken bikes" do
-      subject.dock_bike bike
-      subject.dock_bike broken_bike, false
-      subject.dock_bike bike
-      subject.dock_bike broken_bike, false
-      expect(subject.return_bikes).to eq [broken_bike]*2
-    end
-
-    it "should remove the broken bikes" do
-      subject.dock_bike broken_bike, false
-      subject.dock_bike broken_bike, false
-      subject.return_bikes
-      expect(subject.docked?).to eq false
-    end
-
-    it "should leave any working bikes" do
-      subject.dock_bike bike
-      subject.dock_bike broken_bike, false
-      subject.return_bikes
-      expect(subject.docked?).to eq true
-    end
-  end
-
-  describe "#receive_bikes" do
-    it "should accept an array of bike" do
-      subject.receive_bikes(bikes)
-      expect(subject.docked?).to be true
-    end
-
-    it "should make the bikes received available" do
-      subject.receive_bikes(bikes)
-      expect(subject.release_bike).to eq bike
-    end
-  end
+  it_behaves_like "a bike collection"
 end

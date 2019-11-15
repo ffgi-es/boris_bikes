@@ -1,9 +1,9 @@
 class Van
-  def collect_from storage
-    @bikes = storage.return_bikes
-  end
+  DEFAULT_CAPACITY = 20
+  include BikeCollection
 
-  def deliver_to storage
-    storage.receive_bikes @bikes
+  def initialize capacity = DEFAULT_CAPACITY
+    @bikes = []
+    @capacity = capacity >= 0 ? capacity : DEFAULT_CAPACITY
   end
 end
