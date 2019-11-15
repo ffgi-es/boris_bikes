@@ -74,6 +74,11 @@ describe DockingStation do
       }.to raise_error FullStationError
     end
 
+    it "shouldn't raise an error if the capacity has been changed" do
+      station = DockingStation.new 30
+      expect { 30.times { station.dock_bike bike } }.to_not raise_error
+    end
+
     it "should print a response if the bike is damaged" do
       message = /Thank you for the report/
       expect { subject.dock_bike broken_bike, false }.to output(message).to_stdout
